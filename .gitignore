@@ -1,0 +1,6 @@
+forbidden
+.vscode
+token.txt
+venv.txt
+mobileapp/app/node_modules
+
