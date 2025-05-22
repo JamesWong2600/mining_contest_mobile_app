@@ -31,4 +31,7 @@ urlpatterns = [
     path('api/hello/', HelloWorld.as_view()),
     path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('forum/', views.forum, name='forum'),
+    path('forum_send_message/', views.forum_send_message, name='forum_send_message'),
+    path('forum_delete_message/', views.forum_delete_message, name='forum_delete_message'),
 ]

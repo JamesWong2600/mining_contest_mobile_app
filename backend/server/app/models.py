@@ -34,3 +34,10 @@ class Recent_activities(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=128)
     date = models.CharField(max_length=128)
+
+
+class Forum(models.Model):
+    id = models.AutoField(primary_key=True)
+    username = models.CharField(max_length=128)
+    date = models.CharField(max_length=128)
+    content = models.CharField(max_length=200)

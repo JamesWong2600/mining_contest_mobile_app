@@ -6,11 +6,16 @@ import Register from './Register';
 import Login from './login';
 import CompetitionSignupList from './competition_signup_list';
 import Ranking from './ranking/ranking';
-
+import Forum from './forum/forum';
+import React, { useEffect } from 'react';
+import registerForPushNotificationsAsync from './forum/forum';
 
 const Stack = createStackNavigator();
 
 function App() {
+ // useEffect(() => {
+ //   registerForPushNotificationsAsync();
+ // }, []);
   return (
     <NavigationContainer>
       <Stack.Navigator 
@@ -51,6 +56,11 @@ function App() {
           name="Ranking" 
           component={Ranking}
           options={{ title: 'Ranking' }}
+        />
+        <Stack.Screen 
+          name="Forum" 
+          component={Forum}
+          options={{ title: 'Forum' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

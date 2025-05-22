@@ -69,6 +69,11 @@ export default function Dashboard() {
       navigation.replace('Login');
     };
 
+   const handleforum = async () => {
+      navigation.navigate('Forum');
+    };
+
+
   const handleRanking = () => {
       navigation.navigate('Ranking'); 
   }
@@ -133,7 +138,7 @@ export default function Dashboard() {
               <Text style={styles.actionButtonText} onPress={handleCompetitionSignup}>報名比賽</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.actionButton}>
-              <Text style={styles.actionButtonText}>討論區</Text>
+              <Text style={styles.actionButtonText} onPress={handleforum}>討論區</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.actionButton}>
               <Text style={styles.actionButtonText}>反饋</Text>

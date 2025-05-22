@@ -22,6 +22,10 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from .models import Forum
+from datetime import datetime
+
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -195,3 +199,80 @@ def register(request):
         user = User(username=username, email=email, password=password)
         user.save()
     return JsonResponse({"message": "Registration successful."})
+
+@csrf_exempt
+def forum(request):
+    if request.method == 'GET':
+        try:
+            # Get user data and return signup list information
+            """return JsonResponse({
+                'signupList': [
+                    {'id': 1, 'title': 'minecraft新春挖礦大賽', 'date': '2025-4-19', 'status': '已結束', 'prize': '$HKD2000' },
+                    {'id': 2, 'title': 'minecraft春季挖礦小賽', 'date': '2025-4-19', 'status': '已結束', 'prize': '$HKD600' },
+                    {'id': 3, 'title': 'minecraft夏季挖礦大賽', 'date': '2025-4-19', 'status': '未開放', 'prize': '待定' },
+                    {'id': 4, 'title': 'minecraft秋季挖礦大賽', 'date': '2025-4-19', 'status': '未開放', 'prize': '待定' },
+                ]
+            })"""
+        
+            messages = Forum.objects.all().order_by('-date')  # The minus sign indicates descending order
+            
+            # Convert queryset to list of dictionaries
+            messages_list = [
+                {
+                    'id': message.id,
+                    'username': message.username,
+                    'date': message.date,
+                    'content': message.content,
+                } for message in messages
+            ]
+            
+            return JsonResponse({'messages_list': messages_list})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+@csrf_exempt
+def forum_send_message(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            username = data.get('username')
+            content = data.get('content')
+            now = datetime.now()
+            date = now.strftime('%Y-%m-%d-%H:%M:%S')
+            print(f"Username: {username}, Content: {content}, Date: {date}")
+            # Validate input
+            if not username or not date or not content:
+                return JsonResponse({'error': 'All fields are required.'}, status=400)
+
+            # Create and save new Forum message
+            message = Forum(username=username, date=date, content=content)
+            message.save()
+
+            return JsonResponse({'message': 'Message sent successfully.'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+@csrf_exempt
+def forum_delete_message(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            date = data.get('date')
+            print(f"Date: {date}")
+            # Validate input
+            if not date:
+                return JsonResponse({'error': 'Date is required.'}, status=400)
+
+            # Delete Forum message(s) where date matches
+            deleted_count, _ = Forum.objects.filter(date=date).delete()
+
+            if deleted_count == 0:
+                return JsonResponse({'error': 'No message found to delete.'}, status=404)
+
+            return JsonResponse({'message': 'Message deleted successfully.'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
