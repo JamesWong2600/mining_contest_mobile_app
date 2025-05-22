@@ -14,6 +14,7 @@ from .models import User
 from .models import Signup_list
 from .models import Recent_activities
 from .models import Ranking
+from .models import Feedback
 from django.http import JsonResponse
 import json
 from rest_framework.views import APIView
@@ -23,8 +24,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Forum
+from .models import ReportUpload
 from datetime import datetime
-
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+import os
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -275,4 +279,39 @@ def forum_delete_message(request):
             return JsonResponse({'message': 'Message deleted successfully.'})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+@csrf_exempt
+def report_upload(request):
+    if request.method == 'POST':
+        file = request.FILES.get('file')
+        print("FILES:", request.FILES)
+        print(file)
+        description = request.POST.get('description', '')
+
+        if not file:
+            return JsonResponse({'error': 'No file provided.'}, status=400)
+
+        # Save file to media/report_videos/
+        save_path = os.path.join('report_videos', file.name)
+        path = default_storage.save(save_path, ContentFile(file.read()))
+
+        # (Optional) Save to DB if you have a model
+        ReportUpload.objects.create(file=path, description=description)
+
+        return JsonResponse({'message': 'File uploaded successfully.', 'file_url': default_storage.url(path)})
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+@csrf_exempt
+def feedback_submit(request):
+    if request.method == 'POST':
+        #data = json.loads(request.body)
+        #feedback_title = data.get('title')
+        #feedback_content = data.get('description')
+        feedback_title = request.POST.get('title', '')
+        feedback_content = request.POST.get('description', '')
+        print(f"Feedback Title: {feedback_title}, Feedback Content: {feedback_content}")
+        Feedback.objects.create(feedback_title=feedback_title, feedback_content=feedback_content)
+
+        return JsonResponse({'message': 'File uploaded successfully.'})
     return JsonResponse({'error': 'Invalid request method.'}, status=405)

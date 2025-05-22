@@ -9,6 +9,9 @@ import Ranking from './ranking/ranking';
 import Forum from './forum/forum';
 import React, { useEffect } from 'react';
 import registerForPushNotificationsAsync from './forum/forum';
+import Feedback_type from './feedback/feedback_type';
+import Cheating_report from './feedback/cheating_report';
+import Feedback from './feedback/feedback';
 
 const Stack = createStackNavigator();
 
@@ -61,6 +64,21 @@ function App() {
           name="Forum" 
           component={Forum}
           options={{ title: 'Forum' }}
+        />
+        <Stack.Screen 
+          name="Feedback_type" 
+          component={Feedback_type}
+          options={{ title: 'Feedback_type' }}
+        />
+        <Stack.Screen 
+          name="Cheating_report" 
+          component={Cheating_report}
+          options={{ title: 'Cheating_report' }}
+       />
+        <Stack.Screen 
+          name="Feedback" 
+          component={Feedback}
+          options={{ title: 'Feedback' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

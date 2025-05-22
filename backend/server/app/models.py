@@ -41,3 +41,14 @@ class Forum(models.Model):
     username = models.CharField(max_length=128)
     date = models.CharField(max_length=128)
     content = models.CharField(max_length=200)
+
+class ReportUpload(models.Model):
+    file = models.FileField(upload_to='report_videos/')
+    description = models.TextField()
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+class Feedback(models.Model):
+    id = models.AutoField(primary_key=True)
+    feedback_title = models.CharField(max_length=128)
+    feedback_content = models.CharField(max_length=1280)
+    created_at = models.DateTimeField(auto_now_add=True)

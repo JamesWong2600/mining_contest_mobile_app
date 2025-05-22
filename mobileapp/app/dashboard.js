@@ -73,6 +73,9 @@ export default function Dashboard() {
       navigation.navigate('Forum');
     };
 
+   const handleFeedback_type = async () => {
+      navigation.navigate('Feedback_type');
+    };
 
   const handleRanking = () => {
       navigation.navigate('Ranking'); 
@@ -141,7 +144,7 @@ export default function Dashboard() {
               <Text style={styles.actionButtonText} onPress={handleforum}>討論區</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.actionButton}>
-              <Text style={styles.actionButtonText}>反饋</Text>
+              <Text style={styles.actionButtonText} onPress={handleFeedback_type} >反饋</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.actionButton}>
               <Text style={styles.actionButtonText} onPress={handleRanking}>排行榜</Text>

@@ -34,4 +34,6 @@ urlpatterns = [
     path('forum/', views.forum, name='forum'),
     path('forum_send_message/', views.forum_send_message, name='forum_send_message'),
     path('forum_delete_message/', views.forum_delete_message, name='forum_delete_message'),
+    path('report_upload/', views.report_upload, name='report_upload'),
+    path('feedback_submit/', views.feedback_submit, name='feedback_submit'),
 ]
