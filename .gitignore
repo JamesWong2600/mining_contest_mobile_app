@@ -5,3 +5,4 @@ venv.txt
 mobileapp/app/node_modules
 venv.zip
 DjangoKey.pem
+mobileapp/app/config.js
