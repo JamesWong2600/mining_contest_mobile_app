@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import * as DocumentPicker from 'expo-document-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import config from '../config';
 
 export default function Feedback() {
   const [competitions, setCompetitions] = useState([
@@ -73,7 +74,7 @@ const handleSubmit = async () => {
   formData.append('description', description);
 
   try {
-    const response = await fetch('http://192.168.0.78:8000/feedback_submit/', {
+    const response = await fetch(`${config.API_BASE_URL}/feedback_submit/`, {
       method: 'POST',
       body: formData,
      /* headers: {

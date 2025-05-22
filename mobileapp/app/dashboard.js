@@ -4,6 +4,7 @@ import React, { useState, useEffect, useLayoutEffect  } from 'react';
 import { useNavigation, useFocusEffect} from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import config from './config';
 
 export default function Dashboard() {
   const [balance, setBalance] = useState('1000.00'); // Example balance
@@ -83,7 +84,7 @@ export default function Dashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      const response = await fetch('http://192.168.0.78:8000/dashboard/', {
+      const response = await fetch(`${config.API_BASE_URL}/dashboard/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

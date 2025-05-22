@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, ImageBackground, TextInput, TouchableOpacity } 
 import { useState , useEffect} from 'react';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import config from './config';
 
 export default function Login() {
   const navigation = useNavigation();
@@ -10,7 +11,7 @@ export default function Login() {
     useEffect(() => {
   const checkUsername = async () => {
     const usernametitle = await AsyncStorage.getItem('username');
-      alert(usernametitle);
+      //alert(usernametitle);
     if (usernametitle) {
       navigation.navigate('Dashboard');
     }
@@ -28,7 +29,7 @@ export default function Login() {
 
 const handleLogin = async () => {
     try {
-    const response = await fetch('http://192.168.0.78:8000/login/', {
+    const response = await fetch(`${config.API_BASE_URL}/login/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -63,7 +64,7 @@ const handleLogin = async () => {
       <View style={styles.contentContainer}>
         <View style={styles.loginContainer}>
           <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 20 }}>
-            Welcome to Mining Contest Association
+            歡迎來到Minecraft挖礦大賽
           </Text>
           <TextInput
             style={styles.input}
@@ -86,13 +87,13 @@ const handleLogin = async () => {
             style={styles.loginButton}
             onPress={handleLogin}
           >
-            <Text style={styles.loginButtonText}>Login</Text>
+            <Text style={styles.loginButtonText}>登入</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.switchButton}
             onPress={switchbutton}
           >
-            <Text style={styles.loginButtonText}>Switch to Register</Text>
+            <Text style={styles.loginButtonText}>轉到注冊頁面</Text>
           </TouchableOpacity>
         </View>
         <StatusBar style="auto" />

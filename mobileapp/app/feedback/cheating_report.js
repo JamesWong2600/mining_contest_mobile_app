@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, ScrollView, 
 import React, { useState, useEffect } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import * as DocumentPicker from 'expo-document-picker';
+import config from '../config';
 
 export default function Cheating_report() {
   const [competitions, setCompetitions] = useState([
@@ -90,7 +91,7 @@ const handleSubmit = async () => {
   formData.append('description', description);
 
   try {
-    const response = await fetch('http://192.168.0.78:8000/report_upload/', {
+    const response = await fetch(`${config.API_BASE_URL}/report_upload/`, {
       method: 'POST',
       body: formData,
      /* headers: {

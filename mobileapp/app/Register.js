@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, ImageBackground, TextInput, TouchableOpacity } 
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import config from './config';
 
 export default function Register() {
    const navigation = useNavigation();
@@ -10,7 +11,7 @@ export default function Register() {
      useEffect(() => {
     const checkUsername = async () => {
       const usernametitle = await AsyncStorage.getItem('username');
-       alert(usernametitle);
+       //alert(usernametitle);
       if (usernametitle) {
         navigation.navigate('Dashboard');
       }
@@ -37,7 +38,7 @@ export default function Register() {
     
     // Example API call (replace with your actual API endpoint)
     try {
-    const response = await fetch('http://192.168.0.78:8000/register/', {
+    const response = await fetch(`${config.API_BASE_URL}/register/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -77,7 +78,7 @@ export default function Register() {
       <View style={styles.contentContainer}>
         <View style={styles.loginContainer}>
           <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 20 }}>
-            Create New Account
+            歡迎來到Minecraft挖礦大賽
           </Text>
           <TextInput
             style={styles.input}
@@ -118,13 +119,13 @@ export default function Register() {
             style={styles.loginButton}
             onPress={handleRegister}
           >
-            <Text style={styles.loginButtonText}>Register</Text>
+            <Text style={styles.loginButtonText}>注冊</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.switchButton}
             onPress={switchbutton}
           >
-            <Text style={styles.loginButtonText}>Switch to login</Text>
+            <Text style={styles.loginButtonText}>轉到登入頁面</Text>
           </TouchableOpacity>
         </View>
         <StatusBar style="auto" />

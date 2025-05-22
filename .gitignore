@@ -3,4 +3,5 @@ forbidden
 token.txt
 venv.txt
 mobileapp/app/node_modules
-
+venv.zip
+DjangoKey.pem

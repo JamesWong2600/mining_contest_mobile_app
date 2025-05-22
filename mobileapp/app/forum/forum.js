@@ -6,7 +6,7 @@ import { Button } from 'react-native-web';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
-
+import config from '../config';
 
 export default function Forum() {
   let isdelete = 0;
@@ -72,7 +72,7 @@ export default function Forum() {
     const handleDeleteMessage = async (date) => {
         try {
             setIsLoading(true);  // Start loading
-            const response = await fetch('http://192.168.0.78:8000/forum_delete_message/', {
+            const response = await fetch(`${config.API_BASE_URL}/forum_delete_message/`, {
                 method: 'POST',
                 headers: {
                 'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ export default function Forum() {
     const fetchforumMessageData = async () => {
     try {
       setIsLoading(true);  // Start loading
-      const response = await fetch('http://192.168.0.78:8000/forum/', {
+      const response = await fetch(`${config.API_BASE_URL}/forum/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ export default function Forum() {
     const sendMessage = async () => {
     try {
       setIsLoading(true);  // Start loading
-      const response = await fetch('http://192.168.0.78:8000/forum_send_message/', {
+      const response = await fetch(`${config.API_BASE_URL}/forum_send_message/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

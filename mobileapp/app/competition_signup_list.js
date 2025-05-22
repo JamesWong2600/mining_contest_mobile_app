@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import config from './config';
 
 export default function CompetitionSignupList() {
   const [competitions, setCompetitions] = useState([
@@ -44,7 +45,7 @@ export default function CompetitionSignupList() {
     const fetchDashboardData = async () => {
     try {
       setIsLoading(true);  // Start loading
-      const response = await fetch('http://192.168.0.78:8000/signup_list/', {
+      const response = await fetch(`${config.API_BASE_URL}/signup_list/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

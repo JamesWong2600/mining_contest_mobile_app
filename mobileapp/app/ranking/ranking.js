@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, ScrollView }
 import React, { useState, useEffect } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { Image } from 'react-native';
+import config from '../config';
 
 export default function Ranking() {
   const [competitions, setCompetitions] = useState([
@@ -39,7 +40,7 @@ export default function Ranking() {
     const fetchRankingData = async () => {
     try {
       setIsLoading(true);  // Start loading
-      const response = await fetch('http://192.168.0.78:8000/ranking/', {
+      const response = await fetch(`${config.API_BASE_URL}/ranking/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
