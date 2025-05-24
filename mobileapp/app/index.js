@@ -12,6 +12,10 @@ import registerForPushNotificationsAsync from './forum/forum';
 import Feedback_type from './feedback/feedback_type';
 import Cheating_report from './feedback/cheating_report';
 import Feedback from './feedback/feedback';
+import Feedback_list from './feedback/feedback_list/feedback_list';
+import Feedback_content from './feedback/feedback_list/feedback_content';
+import Cheating_report_list from './feedback/cheating_report_list/cheating_report_list';
+import Cheating_report_content from './feedback/cheating_report_list/cheating_report_content';
 
 const Stack = createStackNavigator();
 
@@ -79,6 +83,26 @@ function App() {
           name="Feedback" 
           component={Feedback}
           options={{ title: 'Feedback' }}
+        />
+        <Stack.Screen 
+          name="Feedback_list" 
+          component={Feedback_list}
+          options={{ title: 'Feedback_list' }}
+        />
+        <Stack.Screen 
+          name="Feedback_content" 
+          component={Feedback_content}
+          options={{ title: 'Feedback_content' }}
+        />
+        <Stack.Screen 
+          name="Cheating_report_list" 
+          component={Cheating_report_list}
+          options={{ title: 'Cheating_report_list' }}
+        />
+        <Stack.Screen 
+          name="Cheating_report_content" 
+          component={Cheating_report_content}
+          options={{ title: 'Cheating_report_content' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

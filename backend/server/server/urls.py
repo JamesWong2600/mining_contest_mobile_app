@@ -20,6 +20,8 @@ from app import views
 from app.api import HelloWorld
 from rest_framework_simplejwt.views import (TokenRefreshView)
 from app.views import MyTokenObtainPairView
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,4 +38,13 @@ urlpatterns = [
     path('forum_delete_message/', views.forum_delete_message, name='forum_delete_message'),
     path('report_upload/', views.report_upload, name='report_upload'),
     path('feedback_submit/', views.feedback_submit, name='feedback_submit'),
+    path('feedback_list/', views.feedback_list, name='feedback_list'),
+    path('feedback_delete/', views.feedback_delete, name='feedback_delete'),
+    path('feedback_content/', views.feedback_content, name='feedback_content'),
+    path('report_list/', views.report_list, name='report_list'),
+    path('report_delete/', views.report_delete, name='report_delete'),
+    path('report_content/', views.report_content, name='report_content'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

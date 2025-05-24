@@ -285,10 +285,13 @@ def forum_delete_message(request):
 def report_upload(request):
     if request.method == 'POST':
         file = request.FILES.get('file')
+        username = request.POST.get('username', '')
+        print(f"Username: {username}")
         print("FILES:", request.FILES)
         print(file)
         description = request.POST.get('description', '')
-
+        now = datetime.now()
+        date = now.strftime('%Y-%m-%d-%H:%M:%S')
         if not file:
             return JsonResponse({'error': 'No file provided.'}, status=400)
 
@@ -297,7 +300,7 @@ def report_upload(request):
         path = default_storage.save(save_path, ContentFile(file.read()))
 
         # (Optional) Save to DB if you have a model
-        ReportUpload.objects.create(file=path, description=description)
+        ReportUpload.objects.create(file=path, description=description, username=username, uploaded_at=date)
 
         return JsonResponse({'message': 'File uploaded successfully.', 'file_url': default_storage.url(path)})
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
@@ -310,8 +313,185 @@ def feedback_submit(request):
         #feedback_content = data.get('description')
         feedback_title = request.POST.get('title', '')
         feedback_content = request.POST.get('description', '')
+        usertitle = request.POST.get('username', '')
+        now = datetime.now()
+        date = now.strftime('%Y-%m-%d-%H:%M:%S')
         print(f"Feedback Title: {feedback_title}, Feedback Content: {feedback_content}")
-        Feedback.objects.create(feedback_title=feedback_title, feedback_content=feedback_content)
+        Feedback.objects.create(feedback_title=feedback_title, feedback_content=feedback_content, username=usertitle, created_at=date)
 
         return JsonResponse({'message': 'File uploaded successfully.'})
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+@csrf_exempt
+def feedback_list(request):
+    if request.method == 'POST':
+        try:
+            username = request.POST.get('username', '')
+            print(f"Username: {username}")
+            # Get user data and return signup list information
+            """return JsonResponse({
+                'signupList': [
+                    {'id': 1, 'title': 'minecraft新春挖礦大賽', 'date': '2025-4-19', 'status': '已結束', 'prize': '$HKD2000' },
+                    {'id': 2, 'title': 'minecraft春季挖礦小賽', 'date': '2025-4-19', 'status': '已結束', 'prize': '$HKD600' },
+                    {'id': 3, 'title': 'minecraft夏季挖礦大賽', 'date': '2025-4-19', 'status': '未開放', 'prize': '待定' },
+                    {'id': 4, 'title': 'minecraft秋季挖礦大賽', 'date': '2025-4-19', 'status': '未開放', 'prize': '待定' },
+                ]
+            })"""
+        
+            feedbacks = Feedback.objects.filter(username=username).order_by('-created_at') # The minus sign indicates descending order
+            
+            # Convert queryset to list of dictionaries
+            feedback_list = [
+                {
+                    'id': feedback.id,
+                    'feedback_title': feedback.feedback_title,
+                    'feedback_content': feedback.feedback_content,
+                    'created_at': feedback.created_at,
+                } for feedback in feedbacks
+            ]
+            
+            return JsonResponse({'feedbackList': feedback_list})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+@csrf_exempt
+def feedback_delete(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            date = data.get('date')
+            print(f"Feedback ID: {date}")
+            # Validate input
+            if not date:
+                return JsonResponse({'error': 'ID is required.'}, status=400)
+
+            # Delete Feedback message(s) where id matches
+            deleted_count, _ = Feedback.objects.filter(created_at=date).delete()
+
+            if deleted_count == 0:
+                return JsonResponse({'error': 'No message found to delete.'}, status=404)
+
+            return JsonResponse({'message': 'Message deleted successfully.'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+
+
+@csrf_exempt
+def feedback_content(request):
+    if request.method == 'POST':
+        try:
+            content_date = request.POST.get('date', '')
+            username = request.POST.get('username', '')
+            print(f"Feedback ID: {content_date}, Username: {username}")
+            # Validate input
+            if not content_date:
+                return JsonResponse({'error': 'ID is required.'}, status=400)
+
+            # Get Feedback message(s) where id matches
+            contents = Feedback.objects.filter(created_at=content_date, username=username)
+
+            content_list = [
+                {
+                    'id': content.id,
+                    'feedback_title': content.feedback_title,
+                    'username': content.username,
+                    'feedback_content': content.feedback_content,
+                    'created_at': content.created_at,
+                } for content in contents
+            ]
+            print(content_list)
+
+            if not content_list:
+                return JsonResponse({'error': 'No message found to delete.'}, status=404)
+
+            return JsonResponse({'content': content_list})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+@csrf_exempt
+def report_list(request):
+    if request.method == 'POST':
+        try:
+            username = request.POST.get('username', '')
+            print(f"Username: {username}")
+            # Get user data and return signup list information
+        
+            reports = ReportUpload.objects.filter(username=username).order_by('-uploaded_at') # The minus sign indicates descending order
+            
+            # Convert queryset to list of dictionaries
+            report_list = [
+                {
+                    'id': report.id,
+                    'uploaded_at': report.uploaded_at,
+                } for report in reports
+            ]
+
+            print(report_list)
+            
+            return JsonResponse({'report': report_list})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+        
+
+@csrf_exempt
+def report_delete(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            date = data.get('date')
+            print(f"Feedback ID: {date}")
+            # Validate input
+            if not date:
+                return JsonResponse({'error': 'ID is required.'}, status=400)
+
+            # Delete Feedback message(s) where id matches
+            deleted_count, _ = ReportUpload.objects.filter(created_at=date).delete()
+
+            if deleted_count == 0:
+                return JsonResponse({'error': 'No message found to delete.'}, status=404)
+
+            return JsonResponse({'message': 'Message deleted successfully.'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+@csrf_exempt
+def report_content(request):
+    if request.method == 'POST':
+        try:
+            report_date = request.POST.get('date', '')
+            username = request.POST.get('username', '')
+            print(f"Feedback ID: {report_date}, Username: {username}")
+            # Validate input
+            if not report_date:
+                return JsonResponse({'error': 'ID is required.'}, status=400)
+
+            # Get Feedback message(s) where id matches
+            reports = ReportUpload.objects.filter(uploaded_at=report_date, username=username)
+
+            report_list = [
+                {
+                    'id': report.id,
+                    'username': report.username,
+                    'file': request.build_absolute_uri(report.file.url),
+                    'uploaded_at': report.uploaded_at,
+                } for report in reports
+            ]
+
+            
+            print(report_list)
+
+            if not report_list:
+                return JsonResponse({'error': 'No message found to delete.'}, status=404)
+
+            return JsonResponse({'report_list': report_list})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
     return JsonResponse({'error': 'Invalid request method.'}, status=405)

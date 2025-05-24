@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import * as DocumentPicker from 'expo-document-picker';
 import config from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Cheating_report() {
   const [competitions, setCompetitions] = useState([
@@ -15,11 +16,18 @@ export default function Cheating_report() {
   const [isLoading, setIsLoading] = useState(true); 
   const navigation = useNavigation();
   const [description, setDescription] = useState('');
-
+const [usertitle, setUsertitle] = useState('');
    const [name, setName] = useState('');
    const [size, setSize] = useState('');
    const [url, setUrl] = useState('');
 
+   useEffect(() => {
+    const checkUsername = async () => {
+      const usernametitle = await AsyncStorage.getItem('username');
+      setUsertitle(usernametitle);
+    };
+    checkUsername();
+  }, []);
 
     /* const fetchDashboardData = async () => {
     try {
@@ -89,6 +97,7 @@ const handleSubmit = async () => {
     type: selectedFile.mimeType || 'application/octet-stream',
   });
   formData.append('description', description);
+  formData.append('username', usertitle);
 
   try {
     const response = await fetch(`${config.API_BASE_URL}/report_upload/`, {
@@ -143,13 +152,43 @@ const handleSubmit = async () => {
           onChangeText={setDescription}
         />
         <Button title="提交" onPress={handleSubmit} />
-      </TouchableOpacity>
+         </TouchableOpacity>
+          <TouchableOpacity 
+          style={styles.historyCard}
+          onPress={() => navigation.navigate('Cheating_report_list')}
+        >
+          <View style={styles.cardHeader}>
+            <Text style={styles.cardTitle}>歷史記錄</Text>
+          </View>
+          
+          <View style={styles.cardContent}>
+            <Text style={styles.dateText}>可以查看舉報記錄</Text>
+          </View>
+        </TouchableOpacity>
       <StatusBar style="auto" />
     </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  historyCard: {
+    position: 'absolute',
+    top: '75%',
+    width: '90%',
+    left: '5%',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
   container: {
     flex: 1,
     width: '100%',

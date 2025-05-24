@@ -141,6 +141,18 @@ const handleSubmit = async () => {
         />
         <Button title="提交" onPress={handleSubmit} />
       </TouchableOpacity>
+          <TouchableOpacity 
+          style={styles.historyCard}
+          onPress={() => navigation.navigate('Feedback_list')}
+        >
+          <View style={styles.cardHeader}>
+            <Text style={styles.cardTitle}>歷史記錄</Text>
+          </View>
+          
+          <View style={styles.cardContent}>
+            <Text style={styles.dateText}>可以查看建議列表</Text>
+          </View>
+        </TouchableOpacity>
       <StatusBar style="auto" />
     </ImageBackground>
   );
@@ -161,6 +173,24 @@ const styles = StyleSheet.create({
   competitionCard: {
     position: 'absolute',
     top: '10%',
+    width: '90%',
+    left: '5%',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  historyCard: {
+    position: 'absolute',
+    top: '75%',
     width: '90%',
     left: '5%',
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
